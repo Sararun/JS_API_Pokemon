@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Покемоны</title>
+    <style>
+        #form{
+            display:flex;
+            flex-direction: row;
+        }
+    </style>
+</head>
+<body>
+<h1>Покемоны</h1>
+<form id="form">
+    <input type="text">
+    <button id="search" type="submit">🔎</button>
+</form>
+<img id="spinner" src="simple_pokeball.gif" style="display: none"/>
+<ul id="list">
+</ul>
+<script>
+    const list = document.querySelector("#list");
+    const form = document.querySelector("#form")
+    const input = document.querySelector("input")
+
+    document.addEventListener("DOMContentLoaded", ()=> {
+        const spinner=document.getElementById("spinner")
+        const searchButton=document.getElementById("search");
+        form.addEventListener("submit", async e=>{
+            spinner.style.display = "inline";
+            searchButton.disabled= true;
+            e.preventDefault();
+            const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${input.value}`);
+            var data = await response.json();
+            spinner.style.display = "none";
+            searchButton.disabled= false;
+            render(data);
+        })
+    });
+    function render(data){
+        let result="";
+        for(let item of data.forms){
+            result+= `<li>
+            <b>${item.name}</b><br/>
+
+            </li>`;
+        }
+        list.innerHTML = result;
+    }
+</script>
+</body>
+</html>
